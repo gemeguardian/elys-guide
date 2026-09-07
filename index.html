@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#08090B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBFAF9" media="(prefers-color-scheme: light)">
+<title>Elys — руководство пользователя</title>
+<meta name="description" content="Полный гайд по Telegram-юзерботу Elys: установка, первый запуск, модули, конфиг, безопасность, обновления, бэкапы и разработка своих модулей.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<!-- ░░ tactile layers ░░ -->
+<div class="cursor" aria-hidden="true"><i class="cursor__dot"></i><i class="cursor__ring"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scanline" aria-hidden="true"></div>
+<div class="progress" aria-hidden="true"><i></i></div>
+
+<a class="skip" href="#main">К содержимому</a>
+
+<!-- ░░ boot screen ░░ -->
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot__mark">
+    <svg viewBox="0 0 120 120" class="sigil sigil--boot">
+      <defs>
+        <linearGradient id="bootG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#8CF5C8"/><stop offset=".55" stop-color="#5AD6F0"/><stop offset="1" stop-color="#A99BFF"/>
+        </linearGradient>
+      </defs>
+      <path class="sigil__leaf" d="M60 12c26 14 38 32 38 50 0 24-17 46-38 46S22 86 22 62c0-18 12-36 38-50Z" fill="none" stroke="url(#bootG)" stroke-width="2"/>
+      <path class="sigil__vein" d="M60 108V26M60 58l24-18M60 76l24-18M60 58 36 40M60 76 36 58" fill="none" stroke="url(#bootG)" stroke-width="1.6" stroke-linecap="round"/>
+      <circle class="sigil__core" cx="60" cy="62" r="5" fill="url(#bootG)"/>
+    </svg>
+  </div>
+  <div class="boot__bar"><i></i></div>
+  <div class="boot__log" id="bootLog">initializing elys.guide</div>
+</div>
+
+<!-- ░░ header ░░ -->
+<header class="topbar" id="topbar">
+  <a class="brand" href="#/" data-link>
+    <span class="brand__mark">
+      <svg viewBox="0 0 120 120" class="sigil" aria-hidden="true">
+        <defs>
+          <linearGradient id="brandG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8CF5C8"/><stop offset=".55" stop-color="#5AD6F0"/><stop offset="1" stop-color="#A99BFF"/>
+          </linearGradient>
+        </defs>
+        <path d="M60 12c26 14 38 32 38 50 0 24-17 46-38 46S22 86 22 62c0-18 12-36 38-50Z" fill="none" stroke="url(#brandG)" stroke-width="3"/>
+        <path d="M60 108V26M60 58l24-18M60 76l24-18M60 58 36 40M60 76 36 58" fill="none" stroke="url(#brandG)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="60" cy="62" r="5.5" fill="url(#brandG)"/>
+      </svg>
+    </span>
+    <span class="brand__text">Elys<b>.guide</b></span>
+  </a>
+
+  <nav class="topnav" aria-label="Основная навигация">
+    <a href="#/start" data-link class="topnav__a">Старт</a>
+    <a href="#/modules" data-link class="topnav__a">Модули</a>
+    <a href="#/commands" data-link class="topnav__a">Команды</a>
+    <a href="#/dev" data-link class="topnav__a">Разработка</a>
+  </nav>
+
+  <div class="topbar__actions">
+    <button class="btn btn--ghost btn--k" id="searchBtn" aria-label="Поиск" data-magnetic>
+      <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <span class="btn__label">Поиск</span>
+      <kbd>⌘K</kbd>
+    </button>
+    <button class="btn btn--icon" id="themeBtn" aria-label="Сменить тему" data-magnetic>
+      <svg viewBox="0 0 24 24" class="ic ic--sun" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.4 5.4l1.8 1.8M16.8 16.8l1.8 1.8M18.6 5.4l-1.8 1.8M7.2 16.8l-1.8 1.8"/></svg>
+      <svg viewBox="0 0 24 24" class="ic ic--moon" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.4 8.4 0 1 0 10.4 10.4Z"/></svg>
+    </button>
+    <button class="btn btn--icon only-mobile" id="menuBtn" aria-label="Меню" aria-expanded="false">
+      <span class="burger"><i></i><i></i><i></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- ░░ shell ░░ -->
+<div class="shell">
+
+  <!-- sidebar -->
+  <aside class="sidebar" id="sidebar" aria-label="Оглавление">
+    <div class="sidebar__inner">
+      <div class="sheet__grip" aria-hidden="true"></div>
+      <div class="sidebar__scroll">
+        <p class="sidebar__cap">Начало</p>
+        <a href="#/" data-link class="nav__a"><span class="nav__n">00</span>Обзор</a>
+        <a href="#/start" data-link class="nav__a"><span class="nav__n">01</span>Что нужно перед стартом</a>
+        <a href="#/install" data-link class="nav__a"><span class="nav__n">02</span>Установка</a>
+        <a href="#/first-run" data-link class="nav__a"><span class="nav__n">03</span>Первый запуск</a>
+        <a href="#/inline" data-link class="nav__a"><span class="nav__n">04</span>Inline-бот и help</a>
+        <p class="sidebar__cap">Каждый день</p>
+        <a href="#/modules" data-link class="nav__a"><span class="nav__n">05</span>Модули и репозитории</a>
+        <a href="#/config" data-link class="nav__a"><span class="nav__n">06</span>Конфиг и настройки</a>
+        <a href="#/security" data-link class="nav__a"><span class="nav__n">07</span>Безопасность</a>
+        <a href="#/update" data-link class="nav__a"><span class="nav__n">08</span>Обновления</a>
+        <a href="#/backup" data-link class="nav__a"><span class="nav__n">09</span>Бэкапы и аккаунты</a>
+        <p class="sidebar__cap">Справочник</p>
+        <a href="#/commands" data-link class="nav__a"><span class="nav__n">10</span>Все команды</a>
+        <a href="#/dev" data-link class="nav__a"><span class="nav__n">11</span>Пишем свой модуль</a>
+        <a href="#/faq" data-link class="nav__a"><span class="nav__n">12</span>Проблемы и FAQ</a>
+      </div>
+      <div class="sidebar__foot">
+        <a class="pill" href="https://github.com/ZavozDevs/Elys" target="_blank" rel="noopener">GitHub</a>
+        <a class="pill" href="https://t.me/ElysTalk" target="_blank" rel="noopener">Чат · t.me/ElysTalk</a>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <main class="main" id="main">
+    <!-- ══════════ VIEW: HOME ══════════ -->
+    <article class="view" data-view="/" id="view-home">
+      <section class="hero">
+        <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+        <div class="hero__grid" aria-hidden="true"></div>
+        <div class="hero__body">
+          <span class="tag" data-reveal>гайд · v0.1.1 · master</span>
+          <h1 class="hero__h" data-split>Юзербот Elys,<br>объяснённый честно</h1>
+          <p class="hero__p" data-reveal>От голого VPS до своего модуля. Без воды, без «просто скопируй и верь» — только то, что реально есть в коде.</p>
+          <div class="hero__cta" data-reveal>
+            <a class="btn btn--primary" href="#/install" data-link data-magnetic>
+              <span>Начать установку</span>
+              <svg viewBox="0 0 24 24" class="ic"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg>
+            </a>
+            <a class="btn btn--ghost" href="#/commands" data-link data-magnetic><span>Справочник команд</span></a>
+          </div>
+          <dl class="stats" data-reveal>
+            <div class="stat"><dt>команд в ядре</dt><dd data-count="96">0</dd></div>
+            <div class="stat"><dt>языков интерфейса</dt><dd data-count="10">0</dd></div>
+            <div class="stat"><dt>базовых модулей</dt><dd data-count="22">0</dd></div>
+            <div class="stat"><dt>Python</dt><dd class="stat--txt">3.10+</dd></div>
+          </dl>
+        </div>
+
+        <figure class="hero__art" aria-hidden="true">
+          <div class="orb" data-tilt>
+            <svg viewBox="0 0 400 400" class="artwork">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#8CF5C8"/><stop offset=".5" stop-color="#5AD6F0"/><stop offset="1" stop-color="#A99BFF"/>
+                </linearGradient>
+                <radialGradient id="g2" cx=".5" cy=".42" r=".62">
+                  <stop offset="0" stop-color="#5AD6F0" stop-opacity=".35"/>
+                  <stop offset="1" stop-color="#5AD6F0" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <circle cx="200" cy="195" r="165" fill="url(#g2)"/>
+              <g class="ring ring--1"><circle cx="200" cy="200" r="150" fill="none" stroke="url(#g1)" stroke-width="1" stroke-dasharray="3 9" opacity=".55"/></g>
+              <g class="ring ring--2"><circle cx="200" cy="200" r="118" fill="none" stroke="url(#g1)" stroke-width="1.2" stroke-dasharray="48 14 6 14" opacity=".7"/></g>
+              <g class="ring ring--3"><circle cx="200" cy="200" r="86" fill="none" stroke="url(#g1)" stroke-width="1" stroke-dasharray="2 7" opacity=".5"/></g>
+              <path class="draw" d="M200 62c58 31 84 71 84 111 0 53-38 102-84 102s-84-49-84-102c0-40 26-80 84-111Z" fill="none" stroke="url(#g1)" stroke-width="2.4"/>
+              <path class="draw draw--slow" d="M200 275V96M200 168l53-40M200 208l53-40M200 168l-53-40M200 208l-53-40" fill="none" stroke="url(#g1)" stroke-width="1.8" stroke-linecap="round"/>
+              <circle class="pulse" cx="200" cy="186" r="9" fill="url(#g1)"/>
+              <g class="sat"><circle cx="200" cy="50" r="4" fill="#8CF5C8"/></g>
+              <g class="sat sat--b"><circle cx="200" cy="82" r="3" fill="#A99BFF"/></g>
+            </svg>
+          </div>
+          <div class="chip-float chip-float--a">.help</div>
+          <div class="chip-float chip-float--b">.dlmod</div>
+          <div class="chip-float chip-float--c">.tsec</div>
+        </figure>
+
+        <div class="hero__hint" aria-hidden="true"><i></i>прокрути</div>
+      </section>
+
+      <section class="band">
+        <h2 class="h2" data-reveal>Коротко: что это такое</h2>
+        <p class="lead" data-reveal>Elys — это <b>юзербот</b>: программа, которая заходит в Telegram как <i>вы</i>, а не как обычный бот. Она читает ваши собственные сообщения, видит в них команды вроде <code>.ping</code> и выполняет их. Ветка рода: Hikka → Heroku → Elys.</p>
+        <div class="cards">
+          <div class="card" data-tilt data-reveal>
+            <div class="card__ico">
+              <svg viewBox="0 0 64 64" class="draw-ico"><rect x="6" y="12" width="52" height="40" rx="8"/><path d="M16 26l8 6-8 6M30 40h16"/></svg>
+            </div>
+            <h3>Команды из любого чата</h3>
+            <p>Пишете <code>.help</code> в своём сообщении — бот его перехватывает и редактирует в ответ. Собеседник видит только результат.</p>
+          </div>
+          <div class="card" data-tilt data-reveal>
+            <div class="card__ico">
+              <svg viewBox="0 0 64 64" class="draw-ico"><path d="M32 8 54 20v24L32 56 10 44V20L32 8Z"/><path d="M32 32 54 20M32 32v24M32 32 10 20"/></svg>
+            </div>
+            <h3>Модульность</h3>
+            <p>Ядро маленькое. Всё остальное — <code>.dlmod</code>. Совместимо с модулями FTG, Hikka и Heroku.</p>
+          </div>
+          <div class="card" data-tilt data-reveal>
+            <div class="card__ico">
+              <svg viewBox="0 0 64 64" class="draw-ico"><path d="M32 6 52 14v16c0 14-9 24-20 28C21 54 12 44 12 30V14L32 6Z"/><path d="m24 31 6 6 12-13"/></svg>
+            </div>
+            <h3>Слои безопасности</h3>
+            <p>Группы доступа, таргетированные правила с таймером и анти-флуд для Telegram API.</p>
+          </div>
+          <div class="card" data-tilt data-reveal>
+            <div class="card__ico">
+              <svg viewBox="0 0 64 64" class="draw-ico"><rect x="10" y="10" width="44" height="18" rx="6"/><rect x="10" y="36" width="44" height="18" rx="6"/><path d="M20 19h.02M20 45h.02"/></svg>
+            </div>
+            <h3>Бэкапы и мультиакк</h3>
+            <p>Автоматические бэкапы базы и модулей, несколько аккаунтов на одном сервере.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="band band--tight">
+        <div class="path">
+          <h2 class="h2" data-reveal>Маршрут новичка</h2>
+          <ol class="road">
+            <li data-reveal><span class="road__n">1</span><a href="#/start" data-link><b>Подготовка</b><i>сервер, Python, api_id</i></a></li>
+            <li data-reveal><span class="road__n">2</span><a href="#/install" data-link><b>Установка</b><i>одна команда в терминал</i></a></li>
+            <li data-reveal><span class="road__n">3</span><a href="#/first-run" data-link><b>Авторизация</b><i>QR или номер телефона</i></a></li>
+            <li data-reveal><span class="road__n">4</span><a href="#/modules" data-link><b>Модули</b><i>ставим то, ради чего всё</i></a></li>
+            <li data-reveal><span class="road__n">5</span><a href="#/security" data-link><b>Защита</b><i>чтобы не увели аккаунт</i></a></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="warnbox" data-reveal>
+          <div class="warnbox__ico">
+            <svg viewBox="0 0 48 48" class="draw-ico"><path d="M24 6 44 40H4L24 6Z"/><path d="M24 19v10M24 34h.02"/></svg>
+          </div>
+          <div>
+            <h3>Прочитайте один раз и запомните</h3>
+            <p>Юзербот — это полный доступ к вашему аккаунту. Чужой модуль с <code>.dlmod</code> может слить сессию. Ставьте код только из репозиториев, которым доверяете, и держите <code>.api_fw_protection</code> включённой. Telegram может ограничить аккаунт за агрессивную автоматизацию — риск на вас.</p>
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: START ══════════ -->
+    <article class="view" data-view="/start">
+      <header class="vhead">
+        <span class="vhead__n">01</span>
+        <h1 class="h1" data-split>Что нужно перед стартом</h1>
+        <p class="vhead__p">Три вещи: железо, Python и ключи Telegram. Минут пять работы.</p>
+      </header>
+
+      <section class="prose">
+        <h2 id="where">Где будет жить бот</h2>
+        <p>Юзерботу нужен компьютер, который не выключается. Выключили ноут — бот умёр.</p>
+        <div class="grid grid--3">
+          <div class="tile" data-tilt>
+            <b class="tile__t">VPS · рекомендуется</b>
+            <p>Любой дешёвый Linux-сервер. 1 vCPU / 1 GB RAM хватает с запасом. Ubuntu 22.04+ — самый беспроблемный вариант.</p>
+          </div>
+          <div class="tile" data-tilt>
+            <b class="tile__t">Телефон · для пробы</b>
+            <p>Android + UserLAnd. Работает, но система убьёт процесс в фоне. Не для постоянной жизни.</p>
+          </div>
+          <div class="tile" data-tilt>
+            <b class="tile__t">Windows · через WSL</b>
+            <p>Только WSL2 с Ubuntu. Напрямую на Windows проект не рассчитан и может вести себя странно.</p>
+          </div>
+        </div>
+
+        <h2 id="req">Требования из кода</h2>
+        <ul class="checks">
+          <li><b>Python 3.10 или выше.</b> На 3.9 запуск оборвётся с явной ошибкой — это проверка в <code>__main__.py</code>.</li>
+          <li><b>git</b> — без него не будет работать <code>.update</code>, <code>.rollback</code> и определение ветки.</li>
+          <li><b>Системные библиотеки</b> для Pillow и медиа: <code>libjpeg</code>, <code>libwebp</code>, <code>libffi</code>, <code>ffmpeg</code>, <code>imagemagick</code>. Скрипт <code>install.sh</code> ставит их сам.</li>
+          <li><b>Не root.</b> Под root бот ругается и требует флаг <code>--root</code> либо слово <code>force_insecure</code>.</li>
+        </ul>
+
+        <h2 id="api">API_ID и API_HASH</h2>
+        <p>Это ключи приложения Telegram. Без них клиент не подключится.</p>
+        <ol class="steps">
+          <li><span class="steps__n">1</span><div><b>Откройте <a href="https://my.telegram.org/apps" target="_blank" rel="noopener">my.telegram.org/apps</a></b><p>Войдите по номеру телефона, код придёт в сам Telegram.</p></div></li>
+          <li><span class="steps__n">2</span><div><b>Создайте приложение</b><p>Название и короткое имя — любые. Платформа: Desktop.</p></div></li>
+          <li><span class="steps__n">3</span><div><b>Скопируйте оба значения</b><p>Они понадобятся при первом запуске и лягут в <code>config.json</code> рядом с проектом.</p></div></li>
+        </ol>
+        <div class="note note--warn">
+          <b>Никогда</b> не показывайте скрин с <code>api_hash</code> и не кладите <code>config.json</code> и <code>*.session</code> в публичный репозиторий. Это равносильно отдаче аккаунта.
+        </div>
+
+        <h2 id="tree">Что появится на диске</h2>
+        <div class="tree">
+          <div class="tree__row"><span class="tree__f">Elys/</span></div>
+          <div class="tree__row tree__row--in1"><span class="tree__f">elys/</span><span class="tree__c">ядро: диспетчер, загрузчик, inline, базовые модули</span></div>
+          <div class="tree__row tree__row--in1"><span class="tree__f">loaded_modules/</span><span class="tree__c">всё, что вы ставите через <code>.dlmod</code></span></div>
+          <div class="tree__row tree__row--in1"><span class="tree__f">config.json</span><span class="tree__c">api_id / api_hash</span></div>
+          <div class="tree__row tree__row--in1"><span class="tree__f">*.session</span><span class="tree__c">ваш ключ от Telegram — секрет</span></div>
+          <div class="tree__row tree__row--in1"><span class="tree__f">.venv/</span><span class="tree__c">изолированное окружение Python</span></div>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--next" href="#/install" data-link><i>Дальше</i><b>Установка</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: INSTALL ══════════ -->
+    <article class="view" data-view="/install">
+      <header class="vhead">
+        <span class="vhead__n">02</span>
+        <h1 class="h1" data-split>Установка</h1>
+        <p class="vhead__p">Выберите среду — конструктор соберёт команду под ваш случай.</p>
+      </header>
+
+      <section class="prose">
+        <div class="builder" id="builder">
+          <div class="builder__head">
+            <h2 class="h2 h2--flush">Конструктор команды</h2>
+            <span class="builder__hint">тыкай варианты</span>
+          </div>
+
+          <div class="seg" role="tablist" aria-label="Операционная система">
+            <i class="seg__pill" aria-hidden="true"></i>
+            <button class="seg__b is-on" role="tab" data-os="debian">Ubuntu / Debian</button>
+            <button class="seg__b" role="tab" data-os="fedora">Fedora</button>
+            <button class="seg__b" role="tab" data-os="arch">Arch</button>
+            <button class="seg__b" role="tab" data-os="termux">Termux</button>
+            <button class="seg__b" role="tab" data-os="docker">Docker</button>
+          </div>
+
+          <div class="switches">
+            <label class="switch"><input type="checkbox" id="optRoot"><span class="switch__ui"></span><span class="switch__t">Запуск от root <i>добавит --root</i></span></label>
+            <label class="switch"><input type="checkbox" id="optNoGit"><span class="switch__ui"></span><span class="switch__t">Без git <i>флаг --no-git</i></span></label>
+            <label class="switch"><input type="checkbox" id="optWipe"><span class="switch__ui"></span><span class="switch__t">Снести старые данные <i>--wipe</i></span></label>
+          </div>
+
+          <div class="terminal" id="termOut">
+            <div class="terminal__bar"><i></i><i></i><i></i><span class="terminal__title" id="termTitle">bash — ubuntu</span>
+              <button class="copy" data-copy-target="#termCode" aria-label="Копировать">
+                <svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg>
+                <span>Копия</span>
+              </button>
+            </div>
+            <pre class="terminal__body"><code id="termCode"></code></pre>
+          </div>
+        </div>
+
+        <h2 id="why">Что делает каждая строка</h2>
+        <div class="explain">
+          <div class="explain__row"><code>apt install git python3</code><span>ставим инструменты, без которых ничего не поедет</span></div>
+          <div class="explain__row"><code>git clone …/Elys</code><span>скачиваем исходники в папку <code>Elys</code></span></div>
+          <div class="explain__row"><code>python3 -m venv .venv</code><span>создаём отдельное окружение, чтобы не ломать системный Python</span></div>
+          <div class="explain__row"><code>source .venv/bin/activate</code><span>входим в это окружение. Нужно делать каждый раз после перезахода в SSH</span></div>
+          <div class="explain__row"><code>pip install -r requirements.txt</code><span>ставим зависимости: elystl, Pillow, aiohttp и прочее</span></div>
+          <div class="explain__row"><code>python3 -m elys</code><span>запуск. Запускать только как пакет, не <code>python3 elys/main.py</code></span></div>
+        </div>
+
+        <h2 id="flags">Флаги запуска</h2>
+        <p>Всё из реального разбора аргументов в <code>__main__.py</code> и <code>main.py</code>.</p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Флаг</th><th>Что делает</th></tr></thead>
+            <tbody>
+              <tr><td><code>--root</code></td><td>разрешает запуск под root без вопросов</td></tr>
+              <tr><td><code>-w</code> / <code>--wipe</code></td><td>удаляет сессии, базы, конфиги и <code>loaded_modules</code>. Спросит подтверждение</td></tr>
+              <tr><td><code>--no-git</code></td><td>не трогать git вообще. Ветка берётся из <code>ELYS_BRANCH</code></td></tr>
+              <tr><td><code>--data-root PATH</code></td><td>хранить данные в другой папке</td></tr>
+              <tr><td><code>--type-proxy</code></td><td>ввести прокси при старте (MTProxy / SOCKS)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="keepalive">Чтобы не падал после выхода из SSH</h2>
+        <p>Закрыли терминал — процесс убит. Нужен <code>screen</code> или <code>systemd</code>.</p>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>screen — быстрый способ</span><button class="copy" data-copy-target="#c-screen"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-screen">sudo apt install screen -y
+screen -S elys
+cd ~/Elys &amp;&amp; source .venv/bin/activate &amp;&amp; python3 -m elys
+# отцепиться: Ctrl+A, затем D
+# вернуться:  screen -r elys</code></pre>
+        </div>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>systemd — правильный способ</span><button class="copy" data-copy-target="#c-systemd"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-systemd">sudo tee /etc/systemd/system/elys.service &gt;/dev/null &lt;&lt;'EOF'
+[Unit]
+Description=Elys Userbot
+After=network-online.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/Elys
+ExecStart=/home/%i/Elys/.venv/bin/python -m elys
+Restart=always
+RestartSec=8
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now elys@$USER
+journalctl -u elys@$USER -f</code></pre>
+        </div>
+        <div class="note">Важно: первый запуск сделайте руками в терминале — нужно ввести ключи и код авторизации. Сервис включайте после.</div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/start" data-link><i>Назад</i><b>Подготовка</b></a>
+          <a class="pager__a pager__a--next" href="#/first-run" data-link><i>Дальше</i><b>Первый запуск</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: FIRST RUN ══════════ -->
+    <article class="view" data-view="/first-run">
+      <header class="vhead">
+        <span class="vhead__n">03</span>
+        <h1 class="h1" data-split>Первый запуск</h1>
+        <p class="vhead__p">Самый волнительный шаг. Здесь бот знакомится с вашим аккаунтом.</p>
+      </header>
+
+      <section class="prose">
+        <div class="stagebox">
+          <div class="stagebox__art" aria-hidden="true">
+            <svg viewBox="0 0 320 220" class="artwork artwork--term">
+              <defs>
+                <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#8CF5C8"/><stop offset="1" stop-color="#5AD6F0"/>
+                </linearGradient>
+              </defs>
+              <rect x="16" y="22" width="288" height="176" rx="14" fill="none" stroke="url(#tg)" stroke-width="1.6" opacity=".8"/>
+              <path d="M16 52h288" stroke="url(#tg)" stroke-width="1.2" opacity=".45"/>
+              <circle cx="36" cy="37" r="4" fill="#F2A0A0"/><circle cx="52" cy="37" r="4" fill="#F2C879"/><circle cx="68" cy="37" r="4" fill="#8CF5C8"/>
+              <g class="typeline">
+                <path d="M40 74h12" stroke="#8CF5C8" stroke-width="2" stroke-linecap="round"/>
+                <path class="tl tl--1" d="M60 74h96" stroke="url(#tg)" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+                <path class="tl tl--2" d="M40 96h150" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".35"/>
+                <path class="tl tl--3" d="M40 118h110" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".28"/>
+                <path class="tl tl--4" d="M40 140h180" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".22"/>
+              </g>
+              <rect class="caret" x="40" y="156" width="9" height="16" rx="2" fill="#8CF5C8"/>
+              <g class="qr" opacity=".9">
+                <rect x="228" y="96" width="58" height="58" rx="6" fill="none" stroke="url(#tg)" stroke-width="1.4"/>
+                <rect x="236" y="104" width="14" height="14" rx="3" fill="none" stroke="url(#tg)" stroke-width="1.4"/>
+                <rect x="264" y="104" width="14" height="14" rx="3" fill="none" stroke="url(#tg)" stroke-width="1.4"/>
+                <rect x="236" y="132" width="14" height="14" rx="3" fill="none" stroke="url(#tg)" stroke-width="1.4"/>
+                <rect x="262" y="130" width="5" height="5" fill="#8CF5C8"/><rect x="272" y="130" width="5" height="5" fill="#8CF5C8"/>
+                <rect x="267" y="140" width="5" height="5" fill="#8CF5C8"/><rect x="257" y="140" width="5" height="5" fill="#8CF5C8"/>
+                <rect class="qr__scan" x="228" y="96" width="58" height="2" fill="#8CF5C8" opacity=".9"/>
+              </g>
+            </svg>
+          </div>
+          <div class="stagebox__txt">
+            <h2 class="h2 h2--flush">Сценарий по шагам</h2>
+            <ol class="steps steps--dense">
+              <li><span class="steps__n">1</span><div><b>Ввод api_id и api_hash</b><p>Бот спросит их один раз и сохранит в <code>config.json</code>.</p></div></li>
+              <li><span class="steps__n">2</span><div><b>Способ входа</b><p>QR-код или номер телефона. QR — быстрее: Telegram → Настройки → Устройства → Подключить устройство.</p></div></li>
+              <li><span class="steps__n">3</span><div><b>Код и пароль 2FA</b><p>Если включён облачный пароль — введите его. На экране он не отображается — это нормально.</p></div></li>
+              <li><span class="steps__n">4</span><div><b>Создание inline-бота</b><p>Elys сам пишет <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a> и делает вашего личного бота-помощника.</p></div></li>
+              <li><span class="steps__n">5</span><div><b>Готово</b><p>Напишите себе в «Избранное» <code>.ping</code>. Ответил — живёт.</p></div></li>
+            </ol>
+          </div>
+        </div>
+
+        <h2 id="prefix">Префикс команд</h2>
+        <p>По умолчанию — точка: <code>.help</code>. Если она мешает, меняется одной командой.</p>
+        <div class="cmdrow"><code class="cmdrow__c">.setprefix !</code><span>теперь все команды через <code>!</code></span></div>
+        <div class="note note--warn">Забыли префикс? Он лежит в базе. Откройте своего inline-бота в ЛС — он покажет текущие настройки, или смотрите файл базы в корне проекта.</div>
+
+        <h2 id="root">Запуск под root</h2>
+        <p>Код отказывается работать от root по умолчанию — и это правильно. Если альтернативы нет:</p>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>обход проверки root</span><button class="copy" data-copy-target="#c-root"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-root">python3 -m elys --root
+# либо постоянно — файл-маркер рядом с проектом:
+touch force_insecure
+# или полное отключение sudo-логики:
+touch no_sudo</code></pre>
+        </div>
+        <p>Лучше создать отдельного пользователя:</p>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>безопасный вариант</span><button class="copy" data-copy-target="#c-user"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-user">adduser elys
+usermod -aG sudo elys
+su - elys</code></pre>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/install" data-link><i>Назад</i><b>Установка</b></a>
+          <a class="pager__a pager__a--next" href="#/inline" data-link><i>Дальше</i><b>Inline-бот</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: INLINE ══════════ -->
+    <article class="view" data-view="/inline">
+      <header class="vhead">
+        <span class="vhead__n">04</span>
+        <h1 class="h1" data-split>Inline-бот и справка</h1>
+        <p class="vhead__p">Кнопки, галереи и формы в Telegram работают именно через него.</p>
+      </header>
+
+      <section class="prose">
+        <h2 id="why-inline">Зачем он нужен</h2>
+        <p>Аккаунт человека не умеет рисовать кнопки под сообщением — это может только бот. Поэтому Elys при установке создаёт себе собственного бота и общается с ним изнутри. Современный <code>.help</code> без inline будет выглядеть как простой текст.</p>
+
+        <div class="grid grid--2">
+          <div class="tile" data-tilt>
+            <b class="tile__t">Сменить юзернейм бота</b>
+            <div class="cmdrow cmdrow--bare"><code class="cmdrow__c">.ch_elys_bot &lt;username&gt;</code></div>
+            <p>Полезно, если сгенерировался некрасивый автоматический ник.</p>
+          </div>
+          <div class="tile" data-tilt>
+            <b class="tile__t">Привязать своего бота</b>
+            <div class="cmdrow cmdrow--bare"><code class="cmdrow__c">.ch_bot_token &lt;token&gt;</code></div>
+            <p>Если у вас уже есть готовый бот с нужным именем и аватаркой.</p>
+          </div>
+        </div>
+
+        <h2 id="help">Как читать <code>.help</code></h2>
+        <div class="explain">
+          <div class="explain__row"><code>.help</code><span>список всех модулей с количеством команд</span></div>
+          <div class="explain__row"><code>.help Loader</code><span>справка по конкретному модулю с описанием каждой команды</span></div>
+          <div class="explain__row"><code>.help dlmod</code><span>можно искать по имени команды, не только модуля</span></div>
+          <div class="explain__row"><code>.helphide &lt;модуль&gt;</code><span>скрыть модуль из справки — чтобы не светить лишнее в чатах</span></div>
+          <div class="explain__row"><code>.support</code><span>ссылка на чат поддержки</span></div>
+        </div>
+
+        <h2 id="emoji">Обозначения в справке</h2>
+        <div class="legend">
+          <div class="legend__i"><span class="legend__e">🔹</span><div><b>Обычная команда</b><p>вызывается текстом в чате</p></div></div>
+          <div class="legend__i"><span class="legend__e">🔘</span><div><b>Inline-команда</b><p>вызывается через <code>@ваш_бот запрос</code></p></div></div>
+          <div class="legend__i"><span class="legend__e">👁</span><div><b>Ватчер</b><p>реагирует на сообщения без команды</p></div></div>
+          <div class="legend__i"><span class="legend__e">🔒</span><div><b>Ограниченный доступ</b><p>только владелец или назначенные группы</p></div></div>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/first-run" data-link><i>Назад</i><b>Первый запуск</b></a>
+          <a class="pager__a pager__a--next" href="#/modules" data-link><i>Дальше</i><b>Модули</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: MODULES ══════════ -->
+    <article class="view" data-view="/modules">
+      <header class="vhead">
+        <span class="vhead__n">05</span>
+        <h1 class="h1" data-split>Модули и репозитории</h1>
+        <p class="vhead__p">Основная причина, по которой юзерботы вообще ставят.</p>
+      </header>
+
+      <section class="prose">
+        <figure class="figure">
+          <svg viewBox="0 0 640 300" class="artwork artwork--net" aria-hidden="true">
+            <defs>
+              <linearGradient id="ng" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8CF5C8"/><stop offset=".5" stop-color="#5AD6F0"/><stop offset="1" stop-color="#A99BFF"/>
+              </linearGradient>
+            </defs>
+            <g class="net__links" stroke="url(#ng)" stroke-width="1.1" opacity=".5" fill="none">
+              <path class="flow" d="M92 150h108"/><path class="flow flow--2" d="M320 150h108"/>
+              <path class="flow flow--3" d="M260 118 320 76h96"/><path class="flow flow--4" d="M260 182 320 224h96"/>
+              <path d="M428 76h44M428 150h44M428 224h44"/>
+            </g>
+            <g class="net__nodes">
+              <g class="nd"><rect x="20" y="128" width="72" height="44" rx="12" fill="none" stroke="url(#ng)" stroke-width="1.6"/><text x="56" y="155" text-anchor="middle" class="lbl">repo</text></g>
+              <g class="nd"><rect x="200" y="110" width="120" height="80" rx="16" fill="none" stroke="url(#ng)" stroke-width="2"/><text x="260" y="146" text-anchor="middle" class="lbl lbl--b">loader</text><text x="260" y="166" text-anchor="middle" class="lbl lbl--s">.dlmod</text></g>
+              <g class="nd"><rect x="472" y="56" width="148" height="40" rx="10" fill="none" stroke="url(#ng)" stroke-width="1.4"/><text x="546" y="81" text-anchor="middle" class="lbl">commands</text></g>
+              <g class="nd"><rect x="472" y="130" width="148" height="40" rx="10" fill="none" stroke="url(#ng)" stroke-width="1.4"/><text x="546" y="155" text-anchor="middle" class="lbl">watchers</text></g>
+              <g class="nd"><rect x="472" y="204" width="148" height="40" rx="10" fill="none" stroke="url(#ng)" stroke-width="1.4"/><text x="546" y="229" text-anchor="middle" class="lbl">inline</text></g>
+            </g>
+          </svg>
+          <figcaption>Модуль приезжает из репозитория, загрузчик разбирает его на команды, ватчеры и inline-обработчики.</figcaption>
+        </figure>
+
+        <h2 id="install-mod">Ставим модуль</h2>
+        <div class="explain">
+          <div class="explain__row"><code>.dlmod &lt;имя&gt;</code><span>из подключённых репозиториев по короткому имени</span></div>
+          <div class="explain__row"><code>.dlmod &lt;url&gt;</code><span>напрямую по ссылке на <code>.py</code></span></div>
+          <div class="explain__row"><code>.dlmod</code><span>без аргументов — покажет список доступных модулей</span></div>
+          <div class="explain__row"><code>.lm</code> <i>в ответ на файл</i><span>установить присланный файл модуля</span></div>
+          <div class="explain__row"><code>.ulm &lt;имя&gt;</code><span>удалить модуль</span></div>
+          <div class="explain__row"><code>.ml &lt;имя&gt;</code><span>прислать исходный файл установленного модуля</span></div>
+          <div class="explain__row"><code>.clearmodules</code><span>снести все сторонние модули сразу</span></div>
+          <div class="explain__row"><code>.dlmall</code><span>скачать всё из репозитория. Очень плохая идея без нужды</span></div>
+        </div>
+
+        <h2 id="repos">Свои репозитории</h2>
+        <p>Репозиторий — это адрес, где лежат <code>.py</code>-файлы и индекс. Можно добавить свои.</p>
+        <div class="explain">
+          <div class="explain__row"><code>.addrepo &lt;url&gt;</code><span>подключить источник модулей</span></div>
+          <div class="explain__row"><code>.delrepo &lt;url&gt;</code><span>отключить его</span></div>
+        </div>
+        <div class="note note--warn">Любой модуль — это произвольный Python-код с полным доступом к вашей сессии. Незнакомый репозиторий = незнакомый человек с ключами от вашего Telegram.</div>
+
+        <h2 id="presets">Пресеты и наборы</h2>
+        <p>Пресет — готовый список модулей, чтобы после переустановки восстановить сборку одной командой.</p>
+        <div class="explain">
+          <div class="explain__row"><code>.presets</code><span>список доступных пресетов</span></div>
+          <div class="explain__row"><code>.lp &lt;имя&gt;</code><span>установить всё из пресета</span></div>
+          <div class="explain__row"><code>.af &lt;папка&gt;</code><span>добавить текущие модули в свою папку</span></div>
+          <div class="explain__row"><code>.fl &lt;папка&gt;</code><span>загрузить всё из папки</span></div>
+          <div class="explain__row"><code>.rff &lt;папка&gt;</code><span>выкинуть модуль из папки</span></div>
+          <div class="explain__row"><code>.la</code> / <code>.al</code><span>сохранить и восстановить набор алиасов</span></div>
+        </div>
+
+        <h2 id="toggle">Выключить без удаления</h2>
+        <div class="explain">
+          <div class="explain__row"><code>.togglecmd &lt;команда&gt;</code><span>отключить одну команду, модуль останётся</span></div>
+          <div class="explain__row"><code>.togglemod &lt;модуль&gt;</code><span>отключить модуль целиком</span></div>
+          <div class="explain__row"><code>.clearmodule &lt;модуль&gt;</code><span>очистить его данные в базе — сброс настроек</span></div>
+          <div class="explain__row"><code>.watchers</code> / <code>.watcher</code><span>список и вкл/выкл отдельных ватчеров</span></div>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/inline" data-link><i>Назад</i><b>Inline-бот</b></a>
+          <a class="pager__a pager__a--next" href="#/config" data-link><i>Дальше</i><b>Конфиг</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: CONFIG ══════════ -->
+    <article class="view" data-view="/config">
+      <header class="vhead">
+        <span class="vhead__n">06</span>
+        <h1 class="h1" data-split>Конфиг и настройки</h1>
+        <p class="vhead__p">Где крутить ручки ядра и каждого модуля.</p>
+      </header>
+
+      <section class="prose">
+        <h2 id="cfg">Два разных места</h2>
+        <div class="grid grid--2">
+          <div class="tile tile--accent" data-tilt>
+            <b class="tile__t"><code>.config</code></b>
+            <p>Настройки <b>модулей</b>. Открывается интерактивное меню с кнопками. Есть вариант <code>.fconfig</code> — то же, но принудительно текстом.</p>
+          </div>
+          <div class="tile tile--accent" data-tilt>
+            <b class="tile__t"><code>.settings</code></b>
+            <p>Настройки <b>самого юзербота</b>: ник-режимы, ватчеры, служебные переключатели.</p>
+          </div>
+        </div>
+
+        <h2 id="aliases">Алиасы — свои имена команд</h2>
+        <p>Если надоело писать длинное название — сделайте короткое.</p>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>пример</span><button class="copy" data-copy-target="#c-alias"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-alias">.addalias p ping        # теперь .p работает как .ping
+.aliases                # посмотреть все алиасы
+.delalias p             # удалить
+.la                     # сохранить набор в файл</code></pre>
+        </div>
+
+        <h2 id="nonick">Режим без ника (NoNick)</h2>
+        <p>Когда вывод команд не должен выдавать юзербот подписью.</p>
+        <div class="explain">
+          <div class="explain__row"><code>.nonickuser</code><span>для конкретного человека</span></div>
+          <div class="explain__row"><code>.nonickchat</code><span>для чата</span></div>
+          <div class="explain__row"><code>.nonickcmd</code><span>для одной команды</span></div>
+          <div class="explain__row"><code>.nonickusers</code> · <code>.nonickchats</code> · <code>.nonickcmds</code><span>посмотреть текущие списки</span></div>
+        </div>
+
+        <h2 id="blacklist">Чёрные списки</h2>
+        <div class="explain">
+          <div class="explain__row"><code>.blacklist</code><span>бот перестанёт работать в этом чате</span></div>
+          <div class="explain__row"><code>.unblacklist</code><span>вернуть чат</span></div>
+          <div class="explain__row"><code>.blacklistuser</code><span>игнорировать конкретного пользователя</span></div>
+          <div class="explain__row"><code>.unblacklistuser</code><span>снять игнор</span></div>
+        </div>
+
+        <h2 id="lang">Язык интерфейса</h2>
+        <div class="cmdrow"><code class="cmdrow__c">.setlang ru</code><span>в комплекте есть ru, en, de, jp, ua и пара шуточных паков</span></div>
+        <div class="cmdrow"><code class="cmdrow__c">.dllangpack &lt;url&gt;</code><span>подключить свой языковой пакет</span></div>
+        <div class="cmdrow"><code class="cmdrow__c">.tr &lt;текст&gt;</code><span>переводчик как бонус</span></div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/modules" data-link><i>Назад</i><b>Модули</b></a>
+          <a class="pager__a pager__a--next" href="#/security" data-link><i>Дальше</i><b>Безопасность</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: SECURITY ══════════ -->
+    <article class="view" data-view="/security">
+      <header class="vhead">
+        <span class="vhead__n">07</span>
+        <h1 class="h1" data-split>Безопасность</h1>
+        <p class="vhead__p">Самая важная глава во всём гайде. Прочтите целиком.</p>
+      </header>
+
+      <section class="prose">
+        <figure class="figure figure--shield">
+          <svg viewBox="0 0 300 260" class="artwork artwork--shield" aria-hidden="true">
+            <defs>
+              <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#8CF5C8"/><stop offset="1" stop-color="#A99BFF"/>
+              </linearGradient>
+            </defs>
+            <g class="shield__rings" fill="none" stroke="url(#sg)" opacity=".35">
+              <circle class="sw sw--1" cx="150" cy="128" r="112" stroke-width="1" stroke-dasharray="4 10"/>
+              <circle class="sw sw--2" cx="150" cy="128" r="92" stroke-width="1" stroke-dasharray="20 12"/>
+            </g>
+            <path class="draw" d="M150 26 226 56v66c0 46-33 78-76 90-43-12-76-44-76-90V56l76-30Z" fill="none" stroke="url(#sg)" stroke-width="2.2"/>
+            <path class="draw draw--slow" d="m124 126 18 19 36-42" fill="none" stroke="url(#sg)" stroke-width="3" stroke-linecap="round"/>
+            <g class="spark"><circle cx="226" cy="56" r="3.5" fill="#8CF5C8"/></g>
+            <g class="spark spark--b"><circle cx="74" cy="56" r="3.5" fill="#A99BFF"/></g>
+          </svg>
+          <figcaption>Доступ к командам слоистый: уровни модуля → группы → таргетированные правила.</figcaption>
+        </figure>
+
+        <h2 id="levels">Уровни доступа</h2>
+        <p>Каждая команда имеет набор разрешённых ролей. Меняется через <code>.security</code>.</p>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Уровень</th><th>Кто это</th></tr></thead>
+            <tbody>
+              <tr><td><code>owner</code></td><td>вы и те, кого вы добавили в владельцы</td></tr>
+              <tr><td><code>group_owner</code></td><td>создатель чата, где вызвана команда</td></tr>
+              <tr><td><code>group_admin</code></td><td>любой админ чата. Есть точечные варианты: <code>_add_admins</code>, <code>_ban_users</code>, <code>_delete_messages</code>, <code>_change_info</code>, <code>_pin_messages</code>, <code>_invite_users</code></td></tr>
+              <tr><td><code>group_member</code></td><td>любой участник чата</td></tr>
+              <tr><td><code>pm</code></td><td>только в личных сообщениях</td></tr>
+              <tr><td><code>everyone</code></td><td>все. Опасно, включать только осознанно</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="sgroups">Группы безопасности</h2>
+        <p>Вместо того чтобы выдавать права каждому человеку по отдельности, собираете группу и даёте права ей.</p>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>типовой сценарий</span><button class="copy" data-copy-target="#c-sg"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-sg">.newsgroup friends          # создать группу
+.sgroupadd friends @user    # добавить человека
+.sgroup friends ping        # разрешить группе команду
+.sgroups                    # посмотреть все группы
+.sgroupdel friends @user    # выкинуть
+.delsgroup friends          # удалить группу</code></pre>
+        </div>
+
+        <h2 id="tsec">Таргетированные правила (tsec)</h2>
+        <p>Самый точный инструмент: выдать одному человеку одну команду и ограничить временем.</p>
+        <div class="explain">
+          <div class="explain__row"><code>.tsec</code><span>список всех активных правил</span></div>
+          <div class="explain__row"><code>.tsec @user ping</code><span>выдать доступ к команде</span></div>
+          <div class="explain__row"><code>.tsec @user ping 1h</code><span>то же, но на час — потом право сгорит</span></div>
+          <div class="explain__row"><code>.tsecrm @user</code><span>отобрать всё у конкретного человека</span></div>
+          <div class="explain__row"><code>.tsecclr</code><span>обнулить все таргетированные правила</span></div>
+        </div>
+
+        <h2 id="owner">Владельцы и inline</h2>
+        <div class="explain">
+          <div class="explain__row"><code>.owneradd</code> · <code>.ownerrm</code> · <code>.ownerlist</code><span>кто считается владельцем юзербота</span></div>
+          <div class="explain__row"><code>.inlinesec</code><span>кому можно жать кнопки ваших сообщений</span></div>
+          <div class="explain__row"><code>.querysec</code><span>кому можно вызывать вашего inline-бота</span></div>
+        </div>
+        <div class="note note--warn">Добавляя второго владельца, вы даёте ему практически свой аккаунт: ему станет доступен <code>.terminal</code> и <code>.e</code>.</div>
+
+        <h2 id="apilimit">Анти-флуд Telegram API</h2>
+        <p>Модуль APILimiter следит, чтобы кривой модуль не заспамил Telegram запросами и не привёз вам блокировку.</p>
+        <div class="explain">
+          <div class="explain__row"><code>.api_fw_protection</code><span>настройка порогов защиты. Не отключать</span></div>
+          <div class="explain__row"><code>.suspend_api_protect &lt;сек&gt;</code><span>временно притушить защиту, если она мешает легальной задаче</span></div>
+        </div>
+
+        <h2 id="rules">Короткий чек-лист гигиены</h2>
+        <ul class="checks checks--warn">
+          <li>Не ставьте модули из личных сообщений от незнакомцев — даже «проверенные другом».</li>
+          <li>Перед <code>.dlmod</code> по ссылке откройте файл и поищите <code>eval</code>, <code>exec</code>, <code>requests.post</code>, чтение <code>*.session</code>.</li>
+          <li>Включите облачный пароль 2FA в Telegram.</li>
+          <li>Держите <code>.terminal</code> и <code>.e</code> только на <code>owner</code>.</li>
+          <li>Периодически смотрите активные сессии в настройках Telegram.</li>
+          <li>Ставьте юзербот не на основной аккаунт, если боитесь его потерять.</li>
+        </ul>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/config" data-link><i>Назад</i><b>Конфиг</b></a>
+          <a class="pager__a pager__a--next" href="#/update" data-link><i>Дальше</i><b>Обновления</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: UPDATE ══════════ -->
+    <article class="view" data-view="/update">
+      <header class="vhead">
+        <span class="vhead__n">08</span>
+        <h1 class="h1" data-split>Обновления и ветки</h1>
+        <p class="vhead__p">Как жить на свежей версии и не сломать сборку.</p>
+      </header>
+
+      <section class="prose">
+        <div class="explain">
+          <div class="explain__row"><code>.update</code><span>подтянуть изменения и перезапуститься</span></div>
+          <div class="explain__row"><code>.restart</code><span>перезапуск без обновления</span></div>
+          <div class="explain__row"><code>.branch &lt;имя&gt;</code><span>переключиться на другую ветку репозитория</span></div>
+          <div class="explain__row"><code>.rollback</code><span>откатиться на предыдущий коммит, если обновление сломало всё</span></div>
+          <div class="explain__row"><code>.changelog</code><span>список изменений</span></div>
+          <div class="explain__row"><code>.autoupdate</code><span>автоматическое обновление. На продакшене лучше держать выключенным</span></div>
+          <div class="explain__row"><code>.source</code><span>ссылка на исходный код</span></div>
+          <div class="explain__row"><code>.ubstop</code><span>остановить юзербот полностью</span></div>
+          <div class="explain__row"><code>.installation</code><span>ссылка на инструкцию по установке</span></div>
+          <div class="explain__row"><code>.uninstall_elys</code><span>снос юзербота с данными. Необратимо</span></div>
+        </div>
+
+        <h2 id="broken">Если после обновления не запускается</h2>
+        <ol class="steps steps--dense">
+          <li><span class="steps__n">1</span><div><b>Посмотрите лог</b><p>Запуск вручную: ошибка будет в терминале последними строками.</p></div></li>
+          <li><span class="steps__n">2</span><div><b>Обновите зависимости</b><p><code>pip install -r requirements.txt --upgrade</code> — половина проблем именно тут.</p></div></li>
+          <li><span class="steps__n">3</span><div><b>Снесите подозрительный модуль</b><p>Удалите файл из <code>loaded_modules/</code> и запустите снова.</p></div></li>
+          <li><span class="steps__n">4</span><div><b>Откат</b><p><code>git log --oneline -n 5</code>, затем <code>git checkout &lt;хеш&gt;</code> или <code>.rollback</code>.</p></div></li>
+        </ol>
+
+        <h2 id="diag">Диагностика</h2>
+        <div class="explain">
+          <div class="explain__row"><code>.ping</code><span>жив ли бот и какова задержка</span></div>
+          <div class="explain__row"><code>.logs &lt;уровень&gt;</code><span>прислать логи: <code>.logs error</code>, <code>.logs debug</code></span></div>
+          <div class="explain__row"><code>.clearlogs</code><span>очистить буфер логов</span></div>
+          <div class="explain__row"><code>.dump</code><span>технические данные сообщения — незаменимо при отладке модулей</span></div>
+          <div class="explain__row"><code>.info</code> / <code>.ubinfo</code><span>версия, ветка, аптайм</span></div>
+          <div class="explain__row"><code>.setinfo &lt;текст&gt;</code><span>своё оформление карточки <code>.info</code></span></div>
+          <div class="explain__row"><code>.terminal &lt;cmd&gt;</code><span>выполнить команду оболочки прямо из Telegram</span></div>
+          <div class="explain__row"><code>.e &lt;python&gt;</code><span>выполнить Python-код в контексте юзербота</span></div>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/security" data-link><i>Назад</i><b>Безопасность</b></a>
+          <a class="pager__a pager__a--next" href="#/backup" data-link><i>Дальше</i><b>Бэкапы</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: BACKUP ══════════ -->
+    <article class="view" data-view="/backup">
+      <header class="vhead">
+        <span class="vhead__n">09</span>
+        <h1 class="h1" data-split>Бэкапы и аккаунты</h1>
+        <p class="vhead__p">Страховка от «упал сервер и всё пропало».</p>
+      </header>
+
+      <section class="prose">
+        <figure class="figure">
+          <svg viewBox="0 0 420 200" class="artwork artwork--stack" aria-hidden="true">
+            <defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8CF5C8"/><stop offset="1" stop-color="#5AD6F0"/></linearGradient></defs>
+            <g fill="none" stroke="url(#bg1)" stroke-width="1.6">
+              <g class="lay lay--3"><rect x="40" y="128" width="200" height="40" rx="10"/></g>
+              <g class="lay lay--2"><rect x="40" y="86" width="200" height="40" rx="10"/></g>
+              <g class="lay lay--1"><rect x="40" y="44" width="200" height="40" rx="10"/></g>
+              <path class="flow" d="M248 106h60"/>
+              <rect x="312" y="70" width="72" height="72" rx="16"/>
+            </g>
+            <g class="dots">
+              <circle cx="60" cy="64" r="3.5" fill="#8CF5C8"/><circle cx="60" cy="106" r="3.5" fill="#5AD6F0"/><circle cx="60" cy="148" r="3.5" fill="#A99BFF"/>
+            </g>
+            <text x="348" y="112" text-anchor="middle" class="lbl lbl--b">.zip</text>
+          </svg>
+          <figcaption>База, модули и настройки уезжают одним архивом в ваши сообщения.</figcaption>
+        </figure>
+
+        <h2 id="bk">Команды бэкапа</h2>
+        <div class="explain">
+          <div class="explain__row"><code>.backupall</code><span>всё сразу — база плюс модули</span></div>
+          <div class="explain__row"><code>.restoreall</code><span>восстановить всё из архива</span></div>
+          <div class="explain__row"><code>.backupdb</code> / <code>.restoredb</code><span>только база настроек</span></div>
+          <div class="explain__row"><code>.backupmods</code> / <code>.restoremods</code><span>только список и файлы модулей</span></div>
+          <div class="explain__row"><code>.set_backup_period &lt;часы&gt;</code><span>автобэкап с заданной периодичностью</span></div>
+        </div>
+        <div class="note">Разумный дефолт: <code>.set_backup_period 24</code>. Архивы приходят в «Избранное» — там их никто кроме вас не видит.</div>
+
+        <h2 id="multi">Несколько аккаунтов</h2>
+        <p>Один процесс может вести несколько сессий.</p>
+        <div class="explain">
+          <div class="explain__row"><code>.addacc</code><span>добавить аккаунт — пройдёт такая же авторизация</span></div>
+          <div class="explain__row"><code>.switchacc</code><span>переключиться между аккаунтами</span></div>
+        </div>
+
+        <h2 id="manual">Бэкап руками</h2>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>что копировать с сервера</span><button class="copy" data-copy-target="#c-bk"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-bk">cd ~/Elys
+tar czf ~/elys-backup-$(date +%F).tar.gz \
+  config.json *.session loaded_modules/ *.db
+# забрать на свою машину:
+# scp user@host:~/elys-backup-*.tar.gz .</code></pre>
+        </div>
+        <div class="note note--warn">В архиве есть <code>.session</code> — это вход в ваш Telegram без пароля. Не заливайте его в чаты и в облака без шифрования.</div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/update" data-link><i>Назад</i><b>Обновления</b></a>
+          <a class="pager__a pager__a--next" href="#/commands" data-link><i>Дальше</i><b>Справочник</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: COMMANDS ══════════ -->
+    <article class="view" data-view="/commands">
+      <header class="vhead">
+        <span class="vhead__n">10</span>
+        <h1 class="h1" data-split>Справочник команд</h1>
+        <p class="vhead__p">Всё ядро, собранное из исходного кода. Фильтруйте и копируйте.</p>
+      </header>
+
+      <section class="prose prose--wide">
+        <div class="cmdbar">
+          <div class="field">
+            <svg viewBox="0 0 24 24" class="ic field__ic"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+            <input type="search" id="cmdSearch" placeholder="Фильтр: dlmod, бэкап, security…" autocomplete="off" aria-label="Фильтр команд">
+            <span class="field__count" id="cmdCount"></span>
+          </div>
+          <div class="chips" id="cmdChips" role="group" aria-label="Фильтр по модулям"></div>
+        </div>
+        <div class="cmdlist" id="cmdList"></div>
+        <div class="empty" id="cmdEmpty" hidden>
+          <svg viewBox="0 0 64 64" class="draw-ico"><circle cx="28" cy="28" r="16"/><path d="m40 40 14 14M20 28h16"/></svg>
+          <p>Ничего не нашлось. Попробуйте короче.</p>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/backup" data-link><i>Назад</i><b>Бэкапы</b></a>
+          <a class="pager__a pager__a--next" href="#/dev" data-link><i>Дальше</i><b>Разработка</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: DEV ══════════ -->
+    <article class="view" data-view="/dev">
+      <header class="vhead">
+        <span class="vhead__n">11</span>
+        <h1 class="h1" data-split>Пишем свой модуль</h1>
+        <p class="vhead__p">Минимальный рабочий скелет и всё API, которое реально есть.</p>
+      </header>
+
+      <section class="prose">
+        <h2 id="hello">Минимальный модуль</h2>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>hello.py</span><button class="copy" data-copy-target="#c-hello"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-hello"># meta developer: @yourname
+
+from .. import loader, utils
+
+
+@loader.tds
+class HelloMod(loader.Module):
+    """Первый модуль"""
+
+    strings = {
+        "name": "Hello",
+        "greet": "👋 <b>Привет, {}!</b>",
+    }
+    strings_ru = {
+        "greet": "👋 <b>Здравствуй, {}!</b>",
+        "_cls_doc": "Первый модуль",
+        "_cmd_doc_hello": "Поздороваться",
+    }
+
+    @loader.command(alias="hi")
+    async def hello(self, message):
+        name = (await message.get_sender()).first_name
+        await utils.answer(message, self.strings("greet").format(name))</code></pre>
+        </div>
+        <p>Сохраните файл, отправьте себе в чат и ответьте на него <code>.lm</code>. Команда <code>.hello</code> сразу работает.</p>
+
+        <h2 id="decorators">Декораторы</h2>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Декоратор</th><th>Назначение</th></tr></thead>
+            <tbody>
+              <tr><td><code>@loader.command()</code></td><td>обычная команда. Принимает <code>alias</code>/<code>aliases</code></td></tr>
+              <tr><td><code>@loader.watcher()</code></td><td>реагирует на все сообщения. Фильтры: <code>only_pm</code>, <code>only_groups</code>, <code>no_media</code>, <code>out</code>…</td></tr>
+              <tr><td><code>@loader.inline_handler()</code></td><td>ответ на inline-запрос вашего бота</td></tr>
+              <tr><td><code>@loader.callback_handler()</code></td><td>обработка нажатий на кнопки</td></tr>
+              <tr><td><code>@loader.loop(interval=60)</code></td><td>фоновая задача. <code>autostart=True</code> — старт сразу</td></tr>
+              <tr><td><code>@loader.raw_handler(…)</code></td><td>сырые апдейты Telegram</td></tr>
+              <tr><td><code>@loader.tds</code></td><td>включает переводы <code>strings_ru</code> и другие языки</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="config-dev">Конфиг модуля</h2>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>ModuleConfig</span><button class="copy" data-copy-target="#c-cfg"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-cfg">def __init__(self):
+    self.config = loader.ModuleConfig(
+        loader.ConfigValue(
+            "greeting",
+            "Привет",
+            lambda: "Текст приветствия",
+            validator=loader.validators.String(),
+        ),
+        loader.ConfigValue(
+            "delay", 5,
+            lambda: "Задержка в секундах",
+            validator=loader.validators.Integer(minimum=0),
+        ),
+    )
+
+# чтение: self.config["delay"]
+# пользователь меняет это через .config</code></pre>
+        </div>
+
+        <h2 id="storage">Хранение данных и inline UI</h2>
+        <div class="codeblock">
+          <div class="codeblock__bar"><span>база и формы</span><button class="copy" data-copy-target="#c-db"><svg viewBox="0 0 24 24" class="ic"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M15 5.5H7A2.5 2.5 0 0 0 4.5 8v8"/></svg><span>Копия</span></button></div>
+          <pre><code id="c-db"># база: имя модуля → ключ → значение
+self.db.set(self.strings("name"), "counter", 1)
+value = self.db.get(self.strings("name"), "counter", 0)
+
+# сообщение с кнопками
+await self.inline.form(
+    message=message,
+    text="Выберите:",
+    reply_markup=[
+        [{"text": "✅ Да", "callback": self._yes}],
+        [{"text": "❌ Нет", "action": "close"}],
+    ],
+)
+
+# галерея
+await self.inline.gallery(
+    message=message,
+    next_handler=lambda: "https://picsum.photos/600/400",
+    caption="Листай",
+)</code></pre>
+        </div>
+
+        <h2 id="perm">Ограничения доступа и жизненный цикл</h2>
+        <div class="explain">
+          <div class="explain__row"><code>@loader.owner</code><span>команда только для владельца</span></div>
+          <div class="explain__row"><code>@loader.unrestricted</code><span>доступна всем — осторожно</span></div>
+          <div class="explain__row"><code>async def client_ready(self, client, db)</code><span>вызывается после загрузки модуля</span></div>
+          <div class="explain__row"><code>async def on_unload(self)</code><span>убрать за собой при выгрузке</span></div>
+          <div class="explain__row"><code>raise loader.LoadError("текст")</code><span>отказаться загружаться с понятной причиной</span></div>
+          <div class="explain__row"><code>raise loader.SelfUnload</code><span>выгрузить себя самостоятельно</span></div>
+          <div class="explain__row"><code># requires: aiohttp</code><span>строка в начале файла — зависимости установятся автоматически</span></div>
+        </div>
+
+        <h2 id="tips">Практика</h2>
+        <ul class="checks">
+          <li>Первая строка <code># meta developer: @nick</code> — так авторство покажется в справке.</li>
+          <li>Всегда отвечайте через <code>utils.answer</code> — он сам решает, редактировать или отправлять.</li>
+          <li>Аргументы берите через <code>utils.get_args_raw(message)</code>.</li>
+          <li>Весь текст — в <code>strings</code>. Зашитые в коде фразы нельзя перевести.</li>
+          <li>Отлаживайте в «Избранном», а не в живых чатах, и смотрите <code>.logs error</code>.</li>
+        </ul>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/commands" data-link><i>Назад</i><b>Справочник</b></a>
+          <a class="pager__a pager__a--next" href="#/faq" data-link><i>Дальше</i><b>FAQ</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <!-- ══════════ VIEW: FAQ ══════════ -->
+    <article class="view" data-view="/faq">
+      <header class="vhead">
+        <span class="vhead__n">12</span>
+        <h1 class="h1" data-split>Проблемы и FAQ</h1>
+        <p class="vhead__p">Самые частые грабли и что с ними делать.</p>
+      </header>
+
+      <section class="prose">
+        <div class="faq" id="faq">
+          <details class="acc"><summary><span>Бот не реагирует на команды</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Проверьте по порядку: процесс жив (<code>screen -r</code> или <code>systemctl status</code>), правильный ли префикс, не попал ли чат в <code>.blacklist</code>. Команда должна быть в вашем собственном сообщении, а не в чужом.</p></div>
+          </details>
+          <details class="acc"><summary><span>Не ставятся зависимости / ошибка сборки Pillow</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Не хватает системных библиотек. Для Debian/Ubuntu:</p><pre><code>sudo apt install -y build-essential python3-dev \
+  libjpeg-dev zlib1g-dev libwebp-dev libffi-dev</code></pre></div>
+          </details>
+          <details class="acc"><summary><span>Пишет, что нельзя запускаться от root</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Сделайте отдельного пользователя — это правильный путь. Если нет выбора — <code>python3 -m elys --root</code> или <code>touch force_insecure</code>.</p></div>
+          </details>
+          <details class="acc"><summary><span>Команды работают, но кнопок нет</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Не создался или сломался inline-бот. Перевыпустите токен в @BotFather и привяжите: <code>.ch_bot_token &lt;token&gt;</code>. У @BotFather есть лимит на 20 ботов — удалите лишние.</p></div>
+          </details>
+          <details class="acc"><summary><span>FloodWait и блокировки</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Какой-то модуль штурмует API. Посмотрите <code>.logs error</code>, отключите кандидата через <code>.togglemod</code>. Никогда не выключайте <code>.api_fw_protection</code> насовсем.</p></div>
+          </details>
+          <details class="acc"><summary><span>Можно ли держать юзербот на телефоне</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Технически да — через UserLAnd или Termux. Но Android агрессивно убивает фоновые процессы. Как песочница — нормально, как постоянный дом — нет.</p></div>
+          </details>
+          <details class="acc"><summary><span>Модули с Hikka и Heroku подойдут</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>В большинстве случаев да: есть слой совместимости и импорты <code>hikkatl</code>/<code>herokutl</code> подменяются автоматически. Модули, лезущие в внутренности ядра, могут отказать.</p></div>
+          </details>
+          <details class="acc"><summary><span>Забыл префикс или выключил важную команду</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Самый надёжный вариант — восстановиться из бэкапа (<code>.restoredb</code>). Если бэкапа нет — остановите бота и почистите ключ в файле базы в корне проекта.</p></div>
+          </details>
+          <details class="acc"><summary><span>Как снести всё начисто</span><i class="acc__x"></i></summary>
+            <div class="acc__b"><p>Из Telegram: <code>.uninstall_elys</code>. С сервера: остановить процесс, <code>rm -rf ~/Elys</code>, и отозвать сессию в Настройки → Устройства.</p></div>
+          </details>
+        </div>
+
+        <div class="final">
+          <h2 class="h2">Где искать помощь</h2>
+          <div class="grid grid--2">
+            <a class="tile tile--link" href="https://t.me/ElysTalk" target="_blank" rel="noopener" data-tilt><b class="tile__t">Чат поддержки</b><p>t.me/ElysTalk — живые люди и авторы модулей</p></a>
+            <a class="tile tile--link" href="https://github.com/ZavozDevs/Elys" target="_blank" rel="noopener" data-tilt><b class="tile__t">Исходный код</b><p>github.com/ZavozDevs/Elys — issues и код ядра</p></a>
+          </div>
+          <p class="disclaimer">Юзерботы не одобрены Telegram. Вы используете их на свой риск и несёте ответственность за то, что делаете со своим аккаунтом. Проект распространяется по лицензии AGPLv3.</p>
+        </div>
+
+        <nav class="pager">
+          <a class="pager__a pager__a--prev" href="#/dev" data-link><i>Назад</i><b>Разработка</b></a>
+          <a class="pager__a pager__a--next" href="#/" data-link><i>В начало</i><b>Обзор</b></a>
+        </nav>
+      </section>
+    </article>
+
+    <footer class="footer">
+      <div class="footer__l">
+        <span class="footer__mark">Elys<b>.guide</b></span>
+        <span class="footer__c">Неофициальное руководство сообщества · ядро v0.1.1 · AGPLv3</span>
+      </div>
+      <div class="footer__r">
+        <a href="https://github.com/ZavozDevs/Elys" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://t.me/ElysTalk" target="_blank" rel="noopener">Telegram</a>
+        <button class="footer__top" id="toTop">Наверх ↑</button>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- ░░ command palette ░░ -->
+<div class="palette" id="palette" hidden>
+  <div class="palette__bd" data-close></div>
+  <div class="palette__box" role="dialog" aria-modal="true" aria-label="Поиск по гайду">
+    <div class="palette__in">
+      <svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <input type="text" id="paletteInput" placeholder="Команда, глава, ключевое слово…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="palette__res" id="paletteRes"></div>
+    <div class="palette__ft"><span><kbd>↑</kbd><kbd>↓</kbd> навигация</span><span><kbd>↵</kbd> открыть</span><span><kbd>⌘K</kbd> вызов</span></div>
+  </div>
+</div>
+
+<!-- ░░ mobile dock ░░ -->
+<nav class="dock" id="dock" aria-label="Мобильная навигация">
+  <i class="dock__ink" aria-hidden="true"></i>
+  <a class="dock__a" href="#/" data-link data-dock="/">
+    <svg viewBox="0 0 24 24" class="ic"><path d="M4 11 12 4l8 7v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19v-8Z"/></svg><span>Главная</span>
+  </a>
+  <a class="dock__a" href="#/install" data-link data-dock="/install">
+    <svg viewBox="0 0 24 24" class="ic"><path d="M12 4v10M8 10.5l4 4 4-4M5 19h14"/></svg><span>Ставим</span>
+  </a>
+  <button class="dock__a dock__a--mid" id="dockSearch">
+    <svg viewBox="0 0 24 24" class="ic"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><span>Поиск</span>
+  </button>
+  <a class="dock__a" href="#/commands" data-link data-dock="/commands">
+    <svg viewBox="0 0 24 24" class="ic"><path d="M6 8.5 9.5 12 6 15.5M12.5 16H18"/><rect x="3" y="4.5" width="18" height="15" rx="3.5"/></svg><span>Команды</span>
+  </a>
+  <button class="dock__a" id="dockMenu">
+    <svg viewBox="0 0 24 24" class="ic"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>Главы</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
